@@ -1,0 +1,11 @@
+WINDOWS:
+    install MSYS2
+    add "C:\msys64\ucrt64\bin" to your PATH variable
+    in the MSYS2 terminal:
+        pacman -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain
+        pacman -S mingw-w64-ucrt-x86_64-sfml
+    now you can compile with compile.bat
+        // or maybe with "mingw32-make"
+
+LINUX:
+    sudo apt-get install libsfml-dev
