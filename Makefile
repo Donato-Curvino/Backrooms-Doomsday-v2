@@ -6,5 +6,7 @@ else
 	FILE_EXTENSION=.out
 endif
 
+FILES=src/BackroomsDoomsday.cpp src/engine/Map.cpp
+
 test:
-	g++ -o bin/BackroomsDoomsdayTST$(FILE_EXTENSION) $(DEBUG_FLAGS) src/BackroomsDoomsday.cpp -lsfml-window -lsfml-system -lsfml-graphics
+	g++ -o bin/BackroomsDoomsdayTST$(FILE_EXTENSION) $(DEBUG_FLAGS) $(FILES) -lsfml-window -lsfml-system -lsfml-graphics
