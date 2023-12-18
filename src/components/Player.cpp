@@ -23,26 +23,26 @@ Player::Player() : sf::Sprite() {
 
 void Player::move(const float dt) {
     // std::cout << M_PI / 180 << std::endl;
-    float dx = std::cos(getRotation() * DEG_TO_RAD) * SPEED * dt;
-    float dy = std::sin(getRotation() * DEG_TO_RAD) * SPEED * dt;
+    float cos_angle = std::cos(getRotation() * DEG_TO_RAD) * SPEED * dt;
+    float sin_angle = std::sin(getRotation() * DEG_TO_RAD) * SPEED * dt;
+    float dx = 0, dy = 0;
 
     if (Kb::isKeyPressed(Kb::W)) {
-        // move forward
-        sf::Sprite::move(dx, dy);
+        dx = cos_angle;             dy = sin_angle;
     } else if (Kb::isKeyPressed(Kb::S)) {
-        sf::Sprite::move(-dx, -dy);
+        dx = -cos_angle;            dy = -sin_angle;
     } else {
         float js_ry = -Js::getAxisPosition(0, Js::Axis::Y) * .01;
-        sf::Sprite::move(js_ry * dx, js_ry * dy);
+        dx = js_ry * cos_angle;     dy = js_ry * sin_angle;
     }
 
     if (Kb::isKeyPressed(Kb::A)) {
-        sf::Sprite::move(dy, -dx);
+        dx += sin_angle;             dy += -cos_angle;
     } else if (Kb::isKeyPressed(Kb::D)) {
-        sf::Sprite::move(-dy, dx);
+        dx += -sin_angle;            dy += cos_angle;
     } else {
         float js_rx = Js::getAxisPosition(0, Js::Axis::X) * .01;
-        sf::Sprite::move(js_rx * dy, js_rx * dx);
+        dx += js_rx * sin_angle;     dy += js_rx * cos_angle;
     }
 
     if (Kb::isKeyPressed(Kb::Left)) {
@@ -53,4 +53,6 @@ void Player::move(const float dt) {
         float js_lx = Js::getAxisPosition(0, Js::Axis::Z) * .01;
         sf::Sprite::rotate(js_lx * dt * SPEED);
     }
+
+    sf::Sprite::move(dx, dy);
 }
