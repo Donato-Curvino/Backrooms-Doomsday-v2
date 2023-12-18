@@ -17,7 +17,7 @@ class Map {
 
 //   public:
     Map(const string name);
-    bool collide(float x, float y) const;
+    bool collide(float posx, float posy) const;
     bool collide(const sf::Vector2f& pos) const;
 };
 

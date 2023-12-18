@@ -21,7 +21,7 @@ Player::Player() : sf::Sprite() {
     }
 }
 
-void Player::move(const float dt) {
+void Player::move(const float dt, const Map& map) {
     // std::cout << M_PI / 180 << std::endl;
     float cos_angle = std::cos(getRotation() * DEG_TO_RAD) * SPEED * dt;
     float sin_angle = std::sin(getRotation() * DEG_TO_RAD) * SPEED * dt;
@@ -54,5 +54,11 @@ void Player::move(const float dt) {
         sf::Sprite::rotate(js_lx * dt * SPEED);
     }
 
+    sf::Vector2f curr_pos = getPosition();
+    if (map.collide(curr_pos.x + dx, curr_pos.y))
+        dx = 0;
+    if (map.collide(curr_pos.x, curr_pos.y + dy))
+        dy = 0;
     sf::Sprite::move(dx, dy);
+    // std::cout << getGlobalBounds().width << " | " << getGlobalBounds().height << std::endl;
 }

@@ -4,6 +4,8 @@
 // #include <SFML/System/Vector2.hpp>
 #include <SFML/Graphics.hpp>
 
+#include "../engine/Map.h"
+
 // subclassing sf::Sprite already contains position and rotation data
 class Player : public sf::Sprite {
   private:
@@ -14,7 +16,7 @@ class Player : public sf::Sprite {
     // float angle;
 
     Player();
-    void move(const float dt);      // may return how much actually moved
+    void move(const float dt, const Map& map);      // may return how much actually moved
 };
 
 #endif

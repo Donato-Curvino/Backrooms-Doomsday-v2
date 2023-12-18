@@ -20,7 +20,9 @@ Map::Map(const string name) {
     // }
 } 
 
-bool Map::collide(float x, float y) const {
+bool Map::collide(float posx, float posy) const {
+    int x = posx / 25;
+    int y = posy / 25;
     return walls[x + y * data.getSize().y];
 }
 

@@ -23,6 +23,7 @@ int main() {
     mapSprite.setScale(25, 25);
 
     Player player;
+    player.setPosition(25, 25);
 
     // GAME LOOP
     while (window.isOpen()) {
@@ -42,7 +43,7 @@ int main() {
             }
         }
 
-        player.move(dt.asSeconds());
+        player.move(dt.asSeconds(), map);
 
         window.clear(sf::Color(0, 0, 255, 255));
         window.draw(mapSprite);
