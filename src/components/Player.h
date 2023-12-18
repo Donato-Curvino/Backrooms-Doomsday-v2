@@ -14,6 +14,7 @@ class Player : public sf::Sprite {
     // float angle;
 
     Player();
+    void move(const float dt);      // may return how much actually moved
 };
 
 #endif

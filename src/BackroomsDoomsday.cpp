@@ -30,17 +30,23 @@ int main() {
         
         // EVENT LOOP
         sf::Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
-                window.close();
+        while (window.pollEvent(event)) {            
+            switch (event.type) {
+                case sf::Event::Closed:
+                    window.close(); 
+                    break;
+                case sf::Event::KeyPressed:
+                    if (event.key.code == sf::Keyboard::Escape)
+                        window.close();
+                    break;
+            }
         }
-        
+
+        player.move(dt.asSeconds());
 
         window.clear(sf::Color(0, 0, 255, 255));
-        // TODO: draw screen
         window.draw(mapSprite);
         window.draw(player);
-        // window.draw(map);
         window.display();
     }
     return 0;
