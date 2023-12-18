@@ -10,6 +10,7 @@
 class Player : public sf::Sprite {
   private:
     sf::Texture skin;
+    float hitbox = 12.5;    // must be 1/2 the map's current scale
 
   public:
     // sf::Vector2f position;

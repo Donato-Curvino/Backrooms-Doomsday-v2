@@ -55,9 +55,11 @@ void Player::move(const float dt, const Map& map) {
     }
 
     sf::Vector2f curr_pos = getPosition();
-    if (map.collide(curr_pos.x + dx, curr_pos.y))
+    if (map.collide(curr_pos.x + hitbox + dx, curr_pos.y + hitbox) || map.collide(curr_pos.x + hitbox + dx, curr_pos.y - hitbox) 
+      || map.collide(curr_pos.x - hitbox + dx, curr_pos.y + hitbox) || map.collide(curr_pos.x - hitbox + dx, curr_pos.y - hitbox))
         dx = 0;
-    if (map.collide(curr_pos.x, curr_pos.y + dy))
+    if (map.collide(curr_pos.x + hitbox, curr_pos.y + hitbox + dy) || map.collide(curr_pos.x + hitbox, curr_pos.y - hitbox + dy)
+      || map.collide(curr_pos.x - hitbox, curr_pos.y + hitbox + dy) || map.collide(curr_pos.x - hitbox, curr_pos.y - hitbox + dy))
         dy = 0;
     sf::Sprite::move(dx, dy);
     // std::cout << getGlobalBounds().width << " | " << getGlobalBounds().height << std::endl;

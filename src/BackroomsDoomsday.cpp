@@ -23,7 +23,7 @@ int main() {
     mapSprite.setScale(25, 25);
 
     Player player;
-    player.setPosition(25, 25);
+    player.setPosition(50, 50);
 
     // GAME LOOP
     while (window.isOpen()) {
