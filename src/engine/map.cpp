@@ -7,4 +7,23 @@ Map::Map(const string name) {
     // else
         // std::cout << (int)data.getPixel(0, 0).r << ", " << (int)data.getPixel(0, 0).g << ", " << (int)data.getPixel(0, 0).b << ", " << (int)data.getPixel(0, 0).a << std::endl;
 
+    sf::Vector2u size = data.getSize();
+    walls = vector<bool>(size.x * size.y);
+    for (int i = 0; i < walls.size(); i++) {
+        walls[i] = ((sf::Color*)data.getPixelsPtr())[i].g == 255;
+    }
+
+    // for (int i = 0; i < size.y; i++) {
+    //     for (int j = 0; j < size.x; j++) 
+    //         std::cout << walls[i * size.y + j] << " ";
+    //     std::cout << std::endl;
+    // }
 } 
+
+bool Map::collide(float x, float y) const {
+    return walls[x + y * data.getSize().y];
+}
+
+bool Map::collide(const sf::Vector2f& pos) const {
+    return Map::collide(pos.x, pos.y);
+}
