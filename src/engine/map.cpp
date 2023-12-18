@@ -4,6 +4,7 @@
 Map::Map(const string name) {
     if(!data.loadFromFile("assets/maps/" + name))
         std::cout << "Error loading map: " << "assets/maps/" + name << std::endl;
-    else
-        std::cout << data.getPixel(0, 0).r << ", " << data.getPixel(0, 0).g << ", " << data.getPixel(0, 0).b << std::endl;
+    // else
+        // std::cout << (int)data.getPixel(0, 0).r << ", " << (int)data.getPixel(0, 0).g << ", " << (int)data.getPixel(0, 0).b << ", " << (int)data.getPixel(0, 0).a << std::endl;
+
 } 

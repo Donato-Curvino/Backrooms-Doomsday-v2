@@ -3,8 +3,8 @@
 
 #include "engine/Map.h"
 
-#define WIDTH 800
-#define HEIGHT 600
+#define WIDTH 1280
+#define HEIGHT 720
 
 using std::string;
 
@@ -16,6 +16,10 @@ int main() {
     sf::VertexArray walls(sf::Lines, WIDTH * 2);
     
     Map map("backroom.png");
+    sf::Texture texture;
+    texture.loadFromImage(map.data);
+    sf::Sprite mapSprite(texture);
+    mapSprite.setScale(25, 25);
 
     // GAME LOOP
     while (window.isOpen()) {
@@ -29,8 +33,9 @@ int main() {
         }
         
 
-        window.clear(sf::Color(0, 255, 0, 255));
+        window.clear(sf::Color(0, 0, 255, 255));
         // TODO: draw screen
+        window.draw(mapSprite);
         // window.draw(map);
         window.display();
     }

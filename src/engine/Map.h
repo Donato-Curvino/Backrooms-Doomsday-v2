@@ -6,11 +6,11 @@
 
 using std::string;
 
-class Map {
-  private:
+class Map{
+  public:
     sf::Image data;
 
-  public:
+//   public:
     Map(const string name);
 };
 
