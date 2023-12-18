@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "engine/Map.h"
+#include "components/Player.h"
 
 #define WIDTH 1280
 #define HEIGHT 720
@@ -21,6 +22,8 @@ int main() {
     sf::Sprite mapSprite(texture);
     mapSprite.setScale(25, 25);
 
+    Player player;
+
     // GAME LOOP
     while (window.isOpen()) {
         sf::Time dt = clock.restart();
@@ -36,6 +39,7 @@ int main() {
         window.clear(sf::Color(0, 0, 255, 255));
         // TODO: draw screen
         window.draw(mapSprite);
+        window.draw(player);
         // window.draw(map);
         window.display();
     }

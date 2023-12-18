@@ -6,7 +6,7 @@
 
 using std::string;
 
-class Map{
+class Map {
   public:
     sf::Image data;
 
