@@ -11,9 +11,9 @@
 float raycast(const Map* map, const sf::Vector2f* pos, float angle, sf::Vertex* line = nullptr) {
     angle *= DEG_TO_RAD;
     float dx = 25 * std::cos(angle);        float dy = 25 * std::sin(angle);
-    float h_endx = pos->x + (dx >= 0 ? (25 - std::fmod(pos->x, 25)) : -(1 + std::fmod(pos->x, 25)));
+    float h_endx = pos->x + (dx >= 0 ? (25 - std::fmod(pos->x, 25)) : -(.0001 + std::fmod(pos->x, 25)));
     float h_endy = pos->y + (h_endx - pos->x) * dy / dx;
-    float v_endy = pos->y + (dy >= 0 ? (25 - std::fmod(pos->y, 25)) : -(1 + std::fmod(pos->y, 25)));
+    float v_endy = pos->y + (dy >= 0 ? (25 - std::fmod(pos->y, 25)) : -(.0001 + std::fmod(pos->y, 25)));
     float v_endx = pos->x + (v_endy - pos->y) * dx / dy;                
     int h_step = (dx >= 0) ? 25 : -25;      int v_step = dy >= 0 ? 25 : -25;
 
