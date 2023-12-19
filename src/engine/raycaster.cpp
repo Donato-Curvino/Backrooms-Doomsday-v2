@@ -1,7 +1,6 @@
 #include <cmath>
 #include <iostream>
 #include <SFML/Graphics/Color.hpp>
-#include <cassert>
 
 #include "raycaster.h"
 

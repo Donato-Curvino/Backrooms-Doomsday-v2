@@ -7,6 +7,7 @@
 
 #define WIDTH 1280
 #define HEIGHT 720
+#define FOV 30
 
 using std::string;
 
@@ -46,12 +47,18 @@ int main() {
 
         player.move(dt.asSeconds(), map);
 
-        sf::VertexArray ray(sf::Lines, 2);
-        raycast(&map, &player.getPosition(), player.getRotation(), &ray[0]);
+        sf::VertexArray rays(sf::Lines, 2 * WIDTH);
+        float da = FOV / (WIDTH * .5);
+        float angle = player.getRotation() - (WIDTH / 2) * da;
+        for (int i = 0; i < WIDTH; i++) {
+            raycast(&map, &player.getPosition(), angle, &rays[i * 2]);
+            angle += da;
+        }
+        // raycast(&map, &player.getPosition(), player.getRotation(), &rays[0]);
 
         window.clear(sf::Color(0, 0, 255, 255));
         window.draw(mapSprite);
-        window.draw(ray);
+        window.draw(rays);
         window.draw(player);
         window.display();
     }
