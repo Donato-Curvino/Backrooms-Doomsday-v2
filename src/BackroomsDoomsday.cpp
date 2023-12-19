@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include <SFML/Graphics.hpp>
 
 #include "engine/Map.h"
@@ -48,18 +49,26 @@ int main() {
         player.move(dt.asSeconds(), map);
 
         sf::VertexArray rays(sf::Lines, 2 * WIDTH);
+        std::vector<float> dists(WIDTH);
         float da = FOV / (WIDTH * .5);
         float angle = player.getRotation() - (WIDTH / 2) * da;
         for (int i = 0; i < WIDTH; i++) {
-            raycast(&map, &player.getPosition(), angle, &rays[i * 2]);
+            dists[i] = raycast(&map, &player.getPosition(), angle, &rays[i * 2]);
             angle += da;
         }
-        // raycast(&map, &player.getPosition(), player.getRotation(), &rays[0]);
+
+        sf::VertexArray walls(sf::Lines, 2 * WIDTH);
+        for (int i = 0; i < WIDTH; i++) {
+            float len = HEIGHT * 25 / dists[i];
+            walls[i * 2] = sf::Vertex(sf::Vector2f(i, HEIGHT * .5 - len), sf::Color::Red);
+            walls[i * 2 + 1] = sf::Vertex(sf::Vector2f(i, HEIGHT * .5 + len), sf::Color::Red);
+        }
 
         window.clear(sf::Color(0, 0, 255, 255));
         window.draw(mapSprite);
         window.draw(rays);
         window.draw(player);
+        window.draw(walls);
         window.display();
     }
     return 0;
