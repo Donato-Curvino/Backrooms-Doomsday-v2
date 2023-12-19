@@ -3,6 +3,7 @@
 
 #include "engine/Map.h"
 #include "components/Player.h"
+#include "engine/raycaster.h"
 
 #define WIDTH 1280
 #define HEIGHT 720
@@ -45,9 +46,13 @@ int main() {
 
         player.move(dt.asSeconds(), map);
 
+        sf::VertexArray ray(sf::Lines, 4);
+        raycast(&map, &player.getPosition(), player.getRotation(), &ray[0]);
+
         window.clear(sf::Color(0, 0, 255, 255));
         window.draw(mapSprite);
         window.draw(player);
+        window.draw(ray);
         window.display();
     }
     return 0;
