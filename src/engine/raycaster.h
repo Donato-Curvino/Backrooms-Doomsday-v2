@@ -5,6 +5,12 @@
 #include <SFML/Graphics/Vertex.hpp>
 #include "Map.h"
 
-float raycast(const Map* map, const sf::Vector2f* pos, float angle, sf::Vertex* line);
+struct Ray {
+    float dist;
+    float tex_offset;
+    bool is_shaded = false;
+};
+
+float raycast(const Map* map, const sf::Vector2f* pos, float angle, Ray* ray, sf::Vertex* line);
 
 #endif

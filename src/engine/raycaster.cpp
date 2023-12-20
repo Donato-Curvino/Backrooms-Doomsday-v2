@@ -8,7 +8,7 @@
 #define DEG_TO_RAD 0.0174533
 #endif
 
-float raycast(const Map* map, const sf::Vector2f* pos, float angle, sf::Vertex* line = nullptr) {
+float raycast(const Map* map, const sf::Vector2f* pos, float angle, Ray* ray, sf::Vertex* line = nullptr) {
     angle *= DEG_TO_RAD;
     float dx = 25 * std::cos(angle);        float dy = 25 * std::sin(angle);
     float h_endx = pos->x + (dx >= 0 ? (25 - std::fmod(pos->x, 25)) : -(.0001 + std::fmod(pos->x, 25)));
@@ -32,10 +32,13 @@ float raycast(const Map* map, const sf::Vector2f* pos, float angle, sf::Vertex* 
     bool h_is_min = false;
     float h_dist = std::sqrt((pos->x - h_endx) * (pos->x - h_endx) + (pos->y - h_endy) * (pos->y - h_endy));
     float v_dist = std::sqrt((pos->x - v_endx) * (pos->x - v_endx) + (pos->y - v_endy) * (pos->y - v_endy));
-    float dist = v_dist;
+    ray->dist = v_dist;
+    ray->tex_offset = std::fmod(v_endx, 25);
     if (h_dist < v_dist) {
         h_is_min = true;
-        dist = h_dist;
+        ray->dist = h_dist;
+        ray->tex_offset = std::fmod(h_endy, 25);
+        ray->is_shaded = true;
     }
 
     if (line != nullptr) {
@@ -43,5 +46,5 @@ float raycast(const Map* map, const sf::Vector2f* pos, float angle, sf::Vertex* 
         line[1] = sf::Vertex(h_is_min ? sf::Vector2f(h_endx, h_endy) : sf::Vector2f(v_endx, v_endy), sf::Color::White);
     }
 
-    return dist;
+    return ray->dist;
 }

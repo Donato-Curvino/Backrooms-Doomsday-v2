@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <cmath>
 #include <SFML/Graphics.hpp>
 
 #include "engine/Map.h"
@@ -9,13 +10,14 @@
 #define WIDTH 1280
 #define HEIGHT 720
 #define FOV 30
+#define DEG_TO_RAD 0.0174533
 
 using std::string;
 
 int main() {
     // INITIALIZE GAME OBJECTS
     sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "My window");
-    window.setFramerateLimit(60);
+    // window.setFramerateLimit(60);
     sf::Clock clock;
     sf::VertexArray walls(sf::Lines, WIDTH * 2);
     
@@ -24,6 +26,8 @@ int main() {
     texture.loadFromImage(map.data);
     sf::Sprite mapSprite(texture);
     mapSprite.setScale(25, 25);
+    sf::Texture wall_tex;
+    wall_tex.loadFromFile("assets/backwall.png");
 
     Player player;
     player.setPosition(50, 50);
@@ -48,27 +52,31 @@ int main() {
 
         player.move(dt.asSeconds(), map);
 
-        sf::VertexArray rays(sf::Lines, 2 * WIDTH);
-        std::vector<float> dists(WIDTH);
+        sf::VertexArray cast_rays(sf::Lines, 2 * WIDTH);
+        std::vector<Ray> rays(WIDTH);
         float da = FOV / (WIDTH * .5);
         float angle = player.getRotation() - (WIDTH / 2) * da;
         for (int i = 0; i < WIDTH; i++) {
-            dists[i] = raycast(&map, &player.getPosition(), angle, &rays[i * 2]);
+            raycast(&map, &player.getPosition(), angle, &rays[i], &cast_rays[i * 2]);
+            rays[i].dist *= std::cos((angle - player.getRotation()) * DEG_TO_RAD);
             angle += da;
         }
 
         sf::VertexArray walls(sf::Lines, 2 * WIDTH);
         for (int i = 0; i < WIDTH; i++) {
-            float len = HEIGHT * 25 / dists[i];
-            walls[i * 2] = sf::Vertex(sf::Vector2f(i, HEIGHT * .5 - len), sf::Color::Red);
-            walls[i * 2 + 1] = sf::Vertex(sf::Vector2f(i, HEIGHT * .5 + len), sf::Color::Red);
+            float len = HEIGHT * 25 / rays[i].dist;
+            walls[i * 2] = sf::Vertex(sf::Vector2f(i, HEIGHT * .5 + len), sf::Vector2f(rays[i].tex_offset, 0));
+            walls[i * 2 + 1] = sf::Vertex(sf::Vector2f(i, HEIGHT * .5 - len), sf::Vector2f(rays[i].tex_offset, wall_tex.getSize().y));
+            if (rays[i].is_shaded) {
+                walls[i * 2].color = walls[i * 2 + 1].color = sf::Color(200, 200, 200);      
+            }
         }
 
         window.clear(sf::Color(0, 0, 255, 255));
-        window.draw(mapSprite);
-        window.draw(rays);
-        window.draw(player);
-        window.draw(walls);
+        // window.draw(mapSprite);
+        // window.draw(cast_rays);
+        // window.draw(player);
+        window.draw(walls, &wall_tex);
         window.display();
     }
     return 0;
