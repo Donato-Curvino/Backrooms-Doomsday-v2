@@ -28,18 +28,22 @@ void Enemy::getVisible(const sf::Vector2f& cam_pos, float cam_angle, const std::
     int size = HEIGHT * 25 / dist;
 
     sf::Vector2f screen_pos; 
-    screen_pos.x = WIDTH * .5 + (rel_angle * WIDTH * .5 / (FOV * DEG_TO_RAD));       // TODO: fix math
+    screen_pos.x = WIDTH * .5 + (rel_angle * WIDTH * .5 / (FOV * DEG_TO_RAD));
     screen_pos.y = HEIGHT * .5 + size;
 
     // get height mask
 
     // set vertex array based on height mask
-    verticies.resize(size * 4);
-    float x = screen_pos.x - size;
+    verticies.resize(size * 4);                 // TODO: vector gets too big when too close
+    int x = screen_pos.x - size;
     for (int i = 0; i < size * 2; i++) {
-        float tex_x = ((float)i / (size * 2)) * m_texture.getSize().x;
-        verticies[i * 2] = sf::Vertex(sf::Vector2f(x, screen_pos.y - 2 * size), sf::Vector2f(tex_x, 0));
-        verticies[i * 2 + 1] = sf::Vertex(sf::Vector2f(x, screen_pos.y), sf::Vector2f(tex_x, m_texture.getSize().y - 1));
+        if (x >= 0 && x < WIDTH && dist < rays[x].dist) {
+            float tex_x = ((float)i / (size * 2)) * m_texture.getSize().x;
+            verticies[i * 2] = sf::Vertex(sf::Vector2f(x, screen_pos.y - 2 * size), sf::Vector2f(tex_x, 0));
+            verticies[i * 2 + 1] = sf::Vertex(sf::Vector2f(x, screen_pos.y), sf::Vector2f(tex_x, m_texture.getSize().y - 1));
+        } else {
+            verticies[i * 2] = verticies[i * 2 + 1] = sf::Vertex();
+        }
         x++;
     }
 }
