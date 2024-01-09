@@ -5,6 +5,7 @@
 
 #include "engine/Map.h"
 #include "components/Player.h"
+#include "components/Enemy.h"
 #include "engine/raycaster.h"
 
 #define WIDTH 1280
@@ -32,6 +33,8 @@ int main() {
     Player player;
     player.setPosition(50, 50);
 
+    Enemy enemy("Skinwalker.png", sf::Vector2f(250, 250));
+
     // GAME LOOP
     while (window.isOpen()) {
         sf::Time dt = clock.restart();
@@ -52,6 +55,7 @@ int main() {
 
         player.move(dt.asSeconds(), map);
 
+        // raycasting
         sf::VertexArray cast_rays(sf::Lines, 2 * WIDTH);
         std::vector<Ray> rays(WIDTH);
         float da = FOV / (WIDTH * .5);
@@ -62,9 +66,10 @@ int main() {
             angle += da;
         }
 
+        // calculating wall height
         sf::VertexArray walls(sf::Lines, 2 * WIDTH);
         for (int i = 0; i < WIDTH; i++) {
-            float len = HEIGHT * 25 / rays[i].dist;
+            float len = HEIGHT * 25 / rays[i].dist;         // TODO: change "25" to scale of map
             walls[i * 2] = sf::Vertex(sf::Vector2f(i, HEIGHT * .5 + len), sf::Vector2f(rays[i].tex_offset, 0));
             walls[i * 2 + 1] = sf::Vertex(sf::Vector2f(i, HEIGHT * .5 - len), sf::Vector2f(rays[i].tex_offset, wall_tex.getSize().y));
             if (rays[i].is_shaded) {
@@ -72,11 +77,14 @@ int main() {
             }
         }
 
+        enemy.getVisible(player.getPosition(), player.getRotation(), rays);
+
         window.clear(sf::Color(0, 0, 255, 255));
         // window.draw(mapSprite);
         // window.draw(cast_rays);
         // window.draw(player);
         window.draw(walls, &wall_tex);
+        window.draw(enemy);
         window.display();
     }
     return 0;

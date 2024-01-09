@@ -33,7 +33,7 @@ float raycast(const Map* map, const sf::Vector2f* pos, float angle, Ray* ray, sf
     float h_dist = std::sqrt((pos->x - h_endx) * (pos->x - h_endx) + (pos->y - h_endy) * (pos->y - h_endy));
     float v_dist = std::sqrt((pos->x - v_endx) * (pos->x - v_endx) + (pos->y - v_endy) * (pos->y - v_endy));
     ray->dist = v_dist;
-    ray->tex_offset = std::fmod(v_endx, 25);
+    ray->tex_offset = std::fmod(v_endx, 25);            //TODO: mod with actual wall texture instead of 25
     if (h_dist < v_dist) {
         h_is_min = true;
         ray->dist = h_dist;
