@@ -17,7 +17,12 @@ Enemy::Enemy(std::string tex_name, sf::Vector2f pos = sf::Vector2f(0.0, 0.0))
     if (!m_texture.loadFromFile("assets/sprites/" + tex_name))
         std::cout << "Error loading texture: assets/sprites/" + tex_name << std::endl;
 
-    verticies.setPrimitiveType(sf::Lines);
+    verticies.setPrimitiveType(sf::Triangles);
+}
+
+bool isVisible(int x, float d, const std::vector<Ray>& rays) {
+    if (x < 0 || x >= WIDTH) return false;
+    return d < rays[x].dist;
 }
 
 void Enemy::getVisible(const sf::Vector2f& cam_pos, float cam_angle, const std::vector<Ray>& rays) {
@@ -34,15 +39,23 @@ void Enemy::getVisible(const sf::Vector2f& cam_pos, float cam_angle, const std::
     // get height mask
 
     // set vertex array based on height mask
-    verticies.resize(size * 4);                 // TODO: vector gets too big when too close
+    verticies.clear();                 // TODO: vector gets too big when too close
     int x = screen_pos.x - size;
+    bool visible = false;
     for (int i = 0; i < size * 2; i++) {
-        if (x >= 0 && x < WIDTH && dist < rays[x].dist) {
-            float tex_x = ((float)i / (size * 2)) * m_texture.getSize().x;
-            verticies[i * 2] = sf::Vertex(sf::Vector2f(x, screen_pos.y - 2 * size), sf::Vector2f(tex_x, 0));
-            verticies[i * 2 + 1] = sf::Vertex(sf::Vector2f(x, screen_pos.y), sf::Vector2f(tex_x, m_texture.getSize().y - 1));
-        } else {
-            verticies[i * 2] = verticies[i * 2 + 1] = sf::Vertex();
+        float tex_x = ((float)i / (size * 2)) * m_texture.getSize().x;
+        if (isVisible(x, dist, rays)) {
+            if (!visible) {
+                visible = true;
+                verticies.append(sf::Vertex(sf::Vector2f(x, screen_pos.y - 2 * size), sf::Vector2f(tex_x, 0)));
+                verticies.append(sf::Vertex(sf::Vector2f(x, screen_pos.y), sf::Vector2f(tex_x, m_texture.getSize().y - 1)));
+            }
+        } else if (visible) {
+            visible = false;
+            verticies.append(sf::Vertex(sf::Vector2f(x, screen_pos.y - 2 * size), sf::Vector2f(tex_x, 0)));
+            verticies.append(verticies[verticies.getVertexCount() - 2]);
+            verticies.append(verticies[verticies.getVertexCount() - 2]);
+            verticies.append(sf::Vertex(sf::Vector2f(x, screen_pos.y), sf::Vector2f(tex_x, m_texture.getSize().y - 1)));
         }
         x++;
     }
@@ -51,4 +64,3 @@ void Enemy::getVisible(const sf::Vector2f& cam_pos, float cam_angle, const std::
 void Enemy::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     target.draw(verticies, &m_texture);
 }
-
