@@ -27,7 +27,11 @@ bool isVisible(int x, float d, const std::vector<Ray>& rays) {
 void Enemy::getVisible(const sf::Vector2f& cam_pos, float cam_angle, const std::vector<Ray>& rays) {
     // get calculated position and size on screen
     sf::Vector2f offset = cam_pos - position;
-    float rel_angle = std::atan2(offset.y, offset.x) + M_PI - cam_angle * DEG_TO_RAD;
+    float rel_angle = std::atan2(offset.y, offset.x) + M_PI;
+    if      (rel_angle < (M_PI * .5) && cam_angle > 270)    rel_angle += (2 * M_PI - cam_angle * DEG_TO_RAD);
+    else if (rel_angle > (1.5 * M_PI) && cam_angle < 90)    rel_angle = -(2 * M_PI - rel_angle) - cam_angle * DEG_TO_RAD;
+    else                                                    rel_angle -= cam_angle * DEG_TO_RAD;
+    
     float dist = std::sqrt(offset.x * offset.x + offset.y * offset.y);
     if (std::abs(rel_angle) < (FOV + 20) * DEG_TO_RAD) dist *= std::cos(rel_angle);
     int size = HEIGHT * 25 / dist;
