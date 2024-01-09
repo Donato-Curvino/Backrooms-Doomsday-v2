@@ -10,7 +10,7 @@ Map::Map(const string name) {
     sf::Vector2u size = data.getSize();
     walls = vector<bool>(size.x * size.y);
     for (int i = 0; i < walls.size(); i++) {
-        walls[i] = ((sf::Color*)data.getPixelsPtr())[i].g == 255;
+        walls[i] = ((sf::Color*)data.getPixelsPtr())[i].g == 255 && ((sf::Color*)data.getPixelsPtr())[i].r != 255;
     }
 
     // for (int i = 0; i < size.y; i++) {

@@ -22,7 +22,7 @@ int main() {
     sf::Clock clock;
     sf::VertexArray walls(sf::Lines, WIDTH * 2);
     
-    Map map("backroom.png");
+    Map map("backroomsTST.png");
     sf::Texture texture;
     texture.loadFromImage(map.data);
     sf::Sprite mapSprite(texture);
@@ -31,9 +31,9 @@ int main() {
     wall_tex.loadFromFile("assets/backwall.png");
 
     Player player;
-    player.setPosition(50, 50);
+    player.setPosition(112, 112);
 
-    Enemy enemy("Skinwalker.png", sf::Vector2f(250, 250));
+    Enemy enemy("Skinwalker.png", sf::Vector2f(312, 312));
 
     // GAME LOOP
     while (window.isOpen()) {
