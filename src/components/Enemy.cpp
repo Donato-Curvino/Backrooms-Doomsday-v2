@@ -88,7 +88,11 @@ void Enemy::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 void Enemy::animate(float dt) {
     active_frame_time += dt;
     if (active_frame_time >= frame_time) {
-        tile_start.x = (tile_start.x + tile_size.x) % m_texture.getSize().x;
+        tile_start.x += tile_size.x;
+        if (tile_start.x >= m_texture.getSize().x) {
+            mirrored = !mirrored;
+            tile_start.x %= m_texture.getSize().x;
+        }
         active_frame_time = std::fmod(active_frame_time, frame_time);
     }
 }
