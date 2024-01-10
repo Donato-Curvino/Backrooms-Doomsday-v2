@@ -13,12 +13,20 @@ class Enemy : public sf::Drawable, public sf::Transformable {
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
     sf::Texture m_texture;
     sf::VertexArray verticies;
+    sf::Vector2u tile_start;
+    sf::Vector2u tile_size; 
+    float frame_time;
+    float active_frame_time;
+    bool mirrored;
 
     // these are seperate from the sprites position and angle on the screen
     float angle;
     sf::Vector2f position;
 
   public:
-    Enemy(std::string tex_name, sf::Vector2f pos);
+    Enemy(std::string tex_name, sf::Vector2u t_sz, sf::Vector2f pos);
     void getVisible(const sf::Vector2f& cam_pos, float cam_angle, const std::vector<Ray>& rays);
+    // TODO: animate
+    void animate(float dt);
+    // TODO: rotate in 3D
 };

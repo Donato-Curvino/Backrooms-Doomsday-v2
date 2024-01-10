@@ -12,8 +12,15 @@
 #define FOV 30
 #define DEG_TO_RAD 0.0174533
 
-Enemy::Enemy(std::string tex_name, sf::Vector2f pos = sf::Vector2f(0.0, 0.0)) 
-  : position{pos}, angle{0.0} {
+Enemy::Enemy(std::string tex_name, sf::Vector2u t_sz, sf::Vector2f pos = sf::Vector2f(0.0, 0.0)) :
+  position{pos}, 
+  angle{0.0}, 
+  tile_start{sf::Vector2u(0, 0)}, 
+  tile_size{t_sz}, 
+  frame_time{.2},
+  active_frame_time{0},
+  mirrored{false}
+{
     if (!m_texture.loadFromFile("assets/sprites/" + tex_name))
         std::cout << "Error loading texture: assets/sprites/" + tex_name << std::endl;
 
@@ -47,32 +54,41 @@ void Enemy::getVisible(const sf::Vector2f& cam_pos, float cam_angle, const std::
     int x = screen_pos.x - size;
     bool visible = false;
     for (int i = 0; i < size * 2; i++) {
-        float tex_x = ((float)i / (size * 2)) * m_texture.getSize().x;
+        float tex_x = mirrored 
+            ? tile_start.x + tile_size.x - 1 - ((float)i / (size * 2)) * tile_size.x
+            : tile_start.x + ((float)i / (size * 2)) * tile_size.x;
         if (isVisible(x, dist, rays)) {
             if (!visible) {
                 visible = true;
-                verticies.append(sf::Vertex(sf::Vector2f(x, screen_pos.y - 2 * size), sf::Vector2f(tex_x, 0)));
-                verticies.append(sf::Vertex(sf::Vector2f(x, screen_pos.y), sf::Vector2f(tex_x, m_texture.getSize().y - 1)));
+                verticies.append(sf::Vertex(sf::Vector2f(x, screen_pos.y - 2 * size), sf::Vector2f(tex_x, tile_start.y)));
+                verticies.append(sf::Vertex(sf::Vector2f(x, screen_pos.y), sf::Vector2f(tex_x, tile_start.y + tile_size.y - 1)));
             }
         } else if (visible) {
             visible = false;
-            if (verticies.getVertexCount() < 2)
-                continue;
-            verticies.append(sf::Vertex(sf::Vector2f(x, screen_pos.y - 2 * size), sf::Vector2f(tex_x, 0)));
+            verticies.append(sf::Vertex(sf::Vector2f(x, screen_pos.y - 2 * size), sf::Vector2f(tex_x, tile_start.y)));
             verticies.append(verticies[verticies.getVertexCount() - 2]);
             verticies.append(verticies[verticies.getVertexCount() - 2]);
-            verticies.append(sf::Vertex(sf::Vector2f(x, screen_pos.y), sf::Vector2f(tex_x, m_texture.getSize().y - 1)));
+            verticies.append(sf::Vertex(sf::Vector2f(x, screen_pos.y), sf::Vector2f(tex_x, tile_start.y + tile_size.y - 1)));
         }
         x++;
     }
     if (visible) {
-        verticies.append(sf::Vertex(sf::Vector2f(x, screen_pos.y - 2 * size), sf::Vector2f(m_texture.getSize().x - 1, 0)));
+        float tex_x = mirrored ? tile_start.x : tile_start.x + tile_size.x - 1;
+        verticies.append(sf::Vertex(sf::Vector2f(x, screen_pos.y - 2 * size), sf::Vector2f(tex_x, tile_start.y)));
         verticies.append(verticies[verticies.getVertexCount() - 2]);
         verticies.append(verticies[verticies.getVertexCount() - 2]);
-        verticies.append(sf::Vertex(sf::Vector2f(x, screen_pos.y), sf::Vector2f(m_texture.getSize().x - 1, m_texture.getSize().y - 1)));
+        verticies.append(sf::Vertex(sf::Vector2f(x, screen_pos.y), sf::Vector2f(tex_x, tile_start.y + tile_size.y - 1)));
     }
 }
 
 void Enemy::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     target.draw(verticies, &m_texture);
+}
+
+void Enemy::animate(float dt) {
+    active_frame_time += dt;
+    if (active_frame_time >= frame_time) {
+        tile_start.x = (tile_start.x + tile_size.x) % m_texture.getSize().x;
+        active_frame_time = std::fmod(active_frame_time, frame_time);
+    }
 }

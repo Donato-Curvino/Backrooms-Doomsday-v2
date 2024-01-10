@@ -33,7 +33,7 @@ int main() {
     Player player;
     player.setPosition(112, 112);
 
-    Enemy enemy("Skinwalker.png", sf::Vector2f(312, 312));
+    Enemy enemy("skinwalker_sheet.png", sf::Vector2u(75, 75), sf::Vector2f(312, 312));
 
     // GAME LOOP
     while (window.isOpen()) {
@@ -77,6 +77,7 @@ int main() {
             }
         }
 
+        enemy.animate(dt.asSeconds());
         enemy.getVisible(player.getPosition(), player.getRotation(), rays);
 
         window.clear(sf::Color(0, 0, 255, 255));
