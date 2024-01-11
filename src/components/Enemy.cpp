@@ -14,7 +14,7 @@
 
 Enemy::Enemy(std::string tex_name, sf::Vector2u t_sz, sf::Vector2f pos = sf::Vector2f(0.0, 0.0)) :
   position{pos}, 
-  angle{0.0}, 
+  rotation{0.0}, 
   tile_start{sf::Vector2u(0, 0)}, 
   tile_size{t_sz}, 
   frame_time{.2},
@@ -32,6 +32,8 @@ bool isVisible(int x, float d, const std::vector<Ray>& rays) {
 }
 
 void Enemy::getVisible(const sf::Vector2f& cam_pos, float cam_angle, const std::vector<Ray>& rays) {
+    rotate3D(cam_angle * DEG_TO_RAD);
+    
     // get calculated position and size on screen
     sf::Vector2f offset = cam_pos - position;
     float rel_angle = std::atan2(offset.y, offset.x) + M_PI;
@@ -88,11 +90,21 @@ void Enemy::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 void Enemy::animate(float dt) {
     active_frame_time += dt;
     if (active_frame_time >= frame_time) {
-        tile_start.x += tile_size.x;
-        if (tile_start.x >= m_texture.getSize().x) {
+        tile_start.y += tile_size.y;
+        if (tile_start.y >= m_texture.getSize().y) {
             mirrored = !mirrored;
-            tile_start.x %= m_texture.getSize().x;
+            tile_start.y %= m_texture.getSize().y;
         }
         active_frame_time = std::fmod(active_frame_time, frame_time);
     }
+}
+
+void Enemy::rotate3D(float cam_angle) {
+    float rel_face = std::fmod(rotation - cam_angle - M_PI * .875, 2 * M_PI);       // -180 for offset in spritesheet +12.5 for camera offset
+    if (rel_face < 0)   
+        rel_face += 2 * M_PI;
+    int sprite_col = rel_face / (.25 * M_PI);
+    if (mirrored && sprite_col != 0) 
+        sprite_col = -(sprite_col - 4) + 4;
+    tile_start.x = sprite_col * tile_size.x;
 }

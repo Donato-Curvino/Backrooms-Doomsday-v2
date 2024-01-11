@@ -20,13 +20,15 @@ class Enemy : public sf::Drawable, public sf::Transformable {
     bool mirrored;
 
     // these are seperate from the sprites position and angle on the screen
-    float angle;
+    float rotation;
     sf::Vector2f position;
+
+    // TODO: rotate in 3D
+    void rotate3D(float cos_angle);
 
   public:
     Enemy(std::string tex_name, sf::Vector2u t_sz, sf::Vector2f pos);
     void getVisible(const sf::Vector2f& cam_pos, float cam_angle, const std::vector<Ray>& rays);
     // TODO: animate
     void animate(float dt);
-    // TODO: rotate in 3D
 };
