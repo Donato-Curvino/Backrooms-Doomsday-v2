@@ -31,9 +31,7 @@ bool isVisible(int x, float d, const std::vector<Ray>& rays) {
     return (x < 0 || x >= WIDTH) ? false : d < rays[x].dist;
 }
 
-void Enemy::getVisible(const sf::Vector2f& cam_pos, float cam_angle, const std::vector<Ray>& rays) {
-    rotate3D(cam_angle * DEG_TO_RAD);
-    
+void Enemy::getVisible(const sf::Vector2f& cam_pos, float cam_angle, const std::vector<Ray>& rays) {    
     // get calculated position and size on screen
     sf::Vector2f offset = cam_pos - position;
     float rel_angle = std::atan2(offset.y, offset.x) + M_PI;
@@ -87,7 +85,7 @@ void Enemy::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     target.draw(verticies, &m_texture);
 }
 
-void Enemy::animate(float dt) {
+void Enemy::animate(float dt, float cam_angle) {
     active_frame_time += dt;
     if (active_frame_time >= frame_time) {
         tile_start.y += tile_size.y;
@@ -97,6 +95,8 @@ void Enemy::animate(float dt) {
         }
         active_frame_time = std::fmod(active_frame_time, frame_time);
     }
+
+    rotate3D(cam_angle * DEG_TO_RAD);
 }
 
 void Enemy::rotate3D(float cam_angle) {
