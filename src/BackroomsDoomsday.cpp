@@ -21,6 +21,9 @@ int main() {
     // window.setFramerateLimit(60);
     sf::Clock clock;
     sf::VertexArray walls(sf::Lines, WIDTH * 2);
+    sf::RenderTexture wall_target;
+    if (!wall_target.create(WIDTH, HEIGHT))
+        return -1;
     
     Map map("backroomsTST.png");
     sf::Texture texture;
@@ -84,7 +87,12 @@ int main() {
         // window.draw(mapSprite);
         // window.draw(cast_rays);
         // window.draw(player);
-        window.draw(walls, &wall_tex);
+        // window.draw(walls, &wall_tex);
+        wall_target.clear();
+        wall_target.draw(walls, &wall_tex);
+        wall_target.display();
+        sf::Sprite wall_sprite(wall_target.getTexture());
+        window.draw(wall_sprite);
         window.draw(enemy);
         window.display();
     }
