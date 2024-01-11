@@ -77,7 +77,7 @@ int main() {
             }
         }
 
-        enemy.animate(dt.asSeconds());
+        enemy.animate(dt.asSeconds(), player.getRotation());
         enemy.getVisible(player.getPosition(), player.getRotation(), rays);
 
         window.clear(sf::Color(0, 0, 255, 255));
