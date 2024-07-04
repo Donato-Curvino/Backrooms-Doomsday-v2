@@ -10,5 +10,4 @@ FILES=src/*.cpp src/engine/*.cpp src/components/*.cpp
 
 test:
 	g++ -o bin/BackroomsDoomsdayTST$(FILE_EXTENSION) $(DEBUG_FLAGS) $(FILES) -lsfml-window -lsfml-system -lsfml-graphics
-	# cd bin
-	# ./BackroomsDoomsdayTST.out
+	bash -c "cd $(CURDIR)/bin && ./BackroomsDoomsdayTST$(FILE_EXTENSION)"
