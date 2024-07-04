@@ -42,8 +42,8 @@ float raycast(const Map* map, const sf::Vector2f* pos, float angle, Ray* ray, sf
     }
 
     if (line != nullptr) {
-        line[0] = sf::Vertex(*pos, sf::Color::White);
-        line[1] = sf::Vertex(h_is_min ? sf::Vector2f(h_endx, h_endy) : sf::Vector2f(v_endx, v_endy), sf::Color::White);
+        line[0] = sf::Vertex(*pos, sf::Color::Red);
+        line[1] = sf::Vertex(h_is_min ? sf::Vector2f(h_endx, h_endy) : sf::Vector2f(v_endx, v_endy), sf::Color::Red);
     }
 
     return ray->dist;
