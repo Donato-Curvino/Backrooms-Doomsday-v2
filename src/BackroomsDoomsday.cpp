@@ -2,7 +2,9 @@
 #include <vector>
 #include <cmath>
 #include <SFML/Graphics.hpp>
+// #include <switch.h>
 
+#include "engine/cross_platform.h"
 #include "engine/Map.h"
 #include "components/Player.h"
 #include "components/Enemy.h"
@@ -15,10 +17,16 @@
 
 using std::string;
 
-int main() {
+int main(int argc, char* argv[]) {
+    std::cout << argv[0] << std::endl;
     // INITIALIZE GAME OBJECTS
-    sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "My window");
-    // window.setFramerateLimit(60);
+    #ifdef __SWITCH__
+      romfsInit();
+      sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "My window");
+    #else
+      sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "My window");
+    #endif
+    window.setFramerateLimit(60);
     sf::Clock clock;
     sf::VertexArray walls(sf::Lines, WIDTH * 2);
     sf::RenderTexture wall_target;
@@ -31,12 +39,16 @@ int main() {
     sf::Sprite mapSprite(texture);
     mapSprite.setScale(25, 25);
     sf::Texture wall_tex;
-    wall_tex.loadFromFile("assets/backwall.png");
+    wall_tex.loadFromFile(PATH_PREFIX("assets/backwall.png"));
 
     Player player;
     player.setPosition(112, 112);
 
     Enemy enemy("skinwalker_sheet.png", sf::Vector2u(75, 75), sf::Vector2f(312, 312));
+
+    sf::RectangleShape rect(sf::Vector2f(25.0, 25.0));
+    rect.setFillColor(sf::Color(255, 255, 0, 255));
+    rect.setPosition(sf::Vector2f(250, 250));
 
     // GAME LOOP
     while (window.isOpen()) {
@@ -87,14 +99,20 @@ int main() {
         // window.draw(mapSprite);
         // window.draw(cast_rays);
         // window.draw(player);
-        // window.draw(walls, &wall_tex);
-        wall_target.clear();
-        wall_target.draw(walls, &wall_tex);
-        wall_target.display();
-        sf::Sprite wall_sprite(wall_target.getTexture());
-        window.draw(wall_sprite);
+        window.draw(walls, &wall_tex);
+        // wall_target.clear(sf::Color(0, 0, 255, 255));
+        // wall_target.draw(walls, &wall_tex);
+        // wall_target.display();
+        // sf::Sprite wall_sprite(wall_target.getTexture());
+        // window.draw(wall_sprite);
         window.draw(enemy);
+        // window.draw(rect);
         window.display();
     }
+
+    #ifdef __SWITCH__
+        romfsExit();
+    #endif
+
     return 0;
 }

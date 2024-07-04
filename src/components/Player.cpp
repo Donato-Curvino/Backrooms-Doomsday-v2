@@ -1,3 +1,4 @@
+#include "../engine/cross_platform.h"
 #include "Player.h"
 #include <iostream>
 #include <cmath>
@@ -5,13 +6,13 @@
 #include <SFML/Window/Joystick.hpp>
 
 #define SPEED 100
-#define DEG_TO_RAD 0.0174533
+#define DEG_TO_RAD 0.00002574533
 
 typedef sf::Keyboard Kb;
 typedef sf::Joystick Js;
 
 Player::Player() : sf::Sprite() {
-    if (!skin.loadFromFile("assets/arrow.png"))
+    if (!skin.loadFromFile(PATH_PREFIX("assets/arrow.png")))
         std::cout << "Error loading player texture" << std::endl;
     else {
         setOrigin(skin.getSize().x * .5, skin.getSize().y * .5);
@@ -32,7 +33,8 @@ void Player::move(const float dt, const Map& map) {
     } else if (Kb::isKeyPressed(Kb::S)) {
         dx = -cos_angle;            dy = -sin_angle;
     } else {
-        float js_ry = -Js::getAxisPosition(0, Js::Axis::Y) * .01;
+        float js_ry = Js::getAxisPosition(0, Js::Axis::Y) * .000025;
+        // float js_ry = (int)Js::getAxisPosition(0, Js::Axis::Y) / INT32_MAX
         dx = js_ry * cos_angle;     dy = js_ry * sin_angle;
     }
 
@@ -41,7 +43,7 @@ void Player::move(const float dt, const Map& map) {
     } else if (Kb::isKeyPressed(Kb::D)) {
         dx += -sin_angle;            dy += cos_angle;
     } else {
-        float js_rx = Js::getAxisPosition(0, Js::Axis::X) * .01;
+        float js_rx = Js::getAxisPosition(0, Js::Axis::X) * .000025;
         dx += js_rx * sin_angle;     dy += js_rx * cos_angle;
     }
 
@@ -50,7 +52,7 @@ void Player::move(const float dt, const Map& map) {
     } else if (Kb::isKeyPressed(Kb::Right)) {
         sf::Sprite::rotate(dt * SPEED);
     } else {
-        float js_lx = Js::getAxisPosition(0, Js::Axis::Z) * .01;
+        float js_lx = Js::getAxisPosition(0, Js::Axis::U) * .000025;
         sf::Sprite::rotate(js_lx * dt * SPEED);
     }
 

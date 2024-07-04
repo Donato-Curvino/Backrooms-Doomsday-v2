@@ -1,3 +1,4 @@
+#include "../engine/cross_platform.h"
 #include "Enemy.h"
 #include <iostream>
 #include <cmath>
@@ -21,7 +22,7 @@ Enemy::Enemy(std::string tex_name, sf::Vector2u t_sz, sf::Vector2f pos = sf::Vec
   active_frame_time{0},
   mirrored{false}
 {
-    if (!m_texture.loadFromFile("assets/sprites/" + tex_name))
+    if (!m_texture.loadFromFile(PATH_PREFIX("assets/sprites/" + tex_name)))
         std::cout << "Error loading texture: assets/sprites/" + tex_name << std::endl;
 
     verticies.setPrimitiveType(sf::Triangles);
