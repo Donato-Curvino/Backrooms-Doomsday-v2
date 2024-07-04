@@ -11,7 +11,7 @@
 #define WIDTH 1280
 #define HEIGHT 720
 #define FOV 30
-#define DEG_TO_RAD 0.0174533
+#define DEG_TO_RAD 0.017453292519943295
 
 Enemy::Enemy(std::string tex_name, sf::Vector2u t_sz, sf::Vector2f pos = sf::Vector2f(0.0, 0.0)) :
   position{pos}, 

@@ -5,7 +5,7 @@
 #include "raycaster.h"
 
 #ifndef DEG_TO_RAD 
-#define DEG_TO_RAD 0.0174533
+#define DEG_TO_RAD 0.017453292519943295
 #endif
 
 float raycast(const Map* map, const sf::Vector2f* pos, float angle, Ray* ray, sf::Vertex* line = nullptr) {

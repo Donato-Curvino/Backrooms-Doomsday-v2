@@ -6,7 +6,7 @@
 #include <SFML/Window/Joystick.hpp>
 
 #define SPEED 100
-#define DEG_TO_RAD 0.00002574533
+#define DEG_TO_RAD 0.017453292519943295
 
 typedef sf::Keyboard Kb;
 typedef sf::Joystick Js;
